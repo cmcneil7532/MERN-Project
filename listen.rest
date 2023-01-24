@@ -1,0 +1,15 @@
+GET http://localhost:8000/api/goals
+
+
+###
+POST http://localhost:8000/api/goals
+
+
+###
+DELETE http://localhost:8000/api/goals/17788
+
+
+
+###
+
+PATCH http://localhost:8000/api/goals/1234
