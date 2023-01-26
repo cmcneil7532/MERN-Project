@@ -28,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //using our middle ware when front end goes to api/goals our route will run
 app.use("/api/goals", require("./routes/goalsRoute"));
+app.use("/api/users", require("./routes/usersRoutes"));
 //put custom errorHandle to our middleware
 app.use(handleError);
 
