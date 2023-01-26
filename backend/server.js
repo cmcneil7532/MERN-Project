@@ -19,7 +19,8 @@ db.once("open", () => {
 db.on("error", (err) => {
   console.error("conncetion error", err);
 });
-//-------------Mongoose--------------
+//-------------EXPRESS--------------
+
 const app = express();
 
 app.use(express.json());

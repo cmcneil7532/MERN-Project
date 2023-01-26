@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
 
-//Create our scheme
+//Create our  user schemea
 const goalSchema = mongoose.Schema(
+  //Create special field called id which will associate specific goals with the specific user
+
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      //The ref will help us associate which model to the correct user
+      ref: 'User'
+    },
+
     text: {
       type: String,
       //IF not text respond Please add text...
