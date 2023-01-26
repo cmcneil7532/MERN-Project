@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser } = require("../controllers/userControllers");
-
-//Create my functions that will handled in the controllers folders
-//@desc Register new user
-//@route POST /api/users
-//@access public
+const {
+  registerUser,
+  getMe,
+  loginUser,
+} = require("../controllers/userControllers");
 
 router.post("/", registerUser);
+router.post("/login", loginUser);
+router.post("/me", getMe);
 
 module.exports = router;
