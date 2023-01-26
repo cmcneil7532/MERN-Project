@@ -13,7 +13,7 @@ mongoose.connect(uri, { useNewUrlParser: true });
 
 const db = mongoose.connection;
 db.once("open", () => {
-  console.log("Database Connected");
+  console.log('Database Connected to mongoDB');
 });
 
 db.on("error", (err) => {
