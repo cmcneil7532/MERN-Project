@@ -27,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 
 //using our middle ware when front end goes to api/goals our route will run
 app.use("/api/goals", require("./routes/goalsRoute"));
+//put custom errorHandle to our middleware
 app.use(handleError);
 
 app.listen(port, () => console.log(`Server started on port ${port}`));

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+//Import our functions
 const {
   getGoals,
   setGoals,
@@ -11,6 +12,7 @@ const {
 //Using the router.route we can combine HTTP request if they use the same ('/')
 router.route("/").get(getGoals).post(setGoals);
 
-router.route("/:id").patch(updateGoals).delete(delteGoals);
+router.route("/:id").delete(delteGoals);
+router.route('/:id').put(updateGoals)
 
 module.exports = router;
