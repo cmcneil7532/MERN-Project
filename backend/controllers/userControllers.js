@@ -37,7 +37,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (user) {
     res.status(201).json({
-        //Send user back this info if success
+      //Send user back this info if success
       _id: user.id,
       name: user.name,
       email: user.email,
@@ -52,15 +52,35 @@ const registerUser = asyncHandler(async (req, res) => {
 //@route POST /api/users/login
 //@access public
 const loginUser = asyncHandler(async (req, res) => {
-  res.json({ message: "Login  User" });
+  const { email, password } = req.body;
+  //Check for user email
+  const user = await UserModel.findOne({ email });
+  //Match the email with the passwaord created
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(201).json({
+      //Send user back this info if success
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invaled credentials");
+  }
 });
 
 //@desc Get user data
 //@route GET /api/users/me
 //@access public
-const getMe = asyncHandler(async (req, res) => {
-  res.json({ message: "Display user Data" });
-});
+const getMe = asyncHandler(async (req, res) => {});
+
+//Generate a JWT
+
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30 days",
+  });
+};
 
 module.exports = {
   registerUser,
