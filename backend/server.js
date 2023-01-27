@@ -1,3 +1,4 @@
+
 const express = require("express");
 const dotenv = require("dotenv").config();
 const port = process.env.PORT || 5000;
@@ -8,14 +9,15 @@ const uri = process.env.MONGO_URI;
 
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
-
+//Connect to mongoDB
 mongoose.connect(uri, { useNewUrlParser: true });
 
 const db = mongoose.connection;
+//Connected
 db.once("open", () => {
   console.log('Database Connected to mongoDB');
 });
-
+//Error
 db.on("error", (err) => {
   console.error("conncetion error", err);
 });
@@ -26,7 +28,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-//using our middle ware when front end goes to api/goals our route will run
+//using our middleware when front end goes to api/goals and api/users our route will run
 app.use("/api/goals", require("./routes/goalsRoute"));
 app.use("/api/users", require("./routes/usersRoutes"));
 //put custom errorHandle to our middleware
