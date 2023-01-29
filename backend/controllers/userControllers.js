@@ -14,7 +14,7 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Please enter name, email, and password ");
   }
-  //Check if user exists
+  //Check if user exists by looking for email
   const userExist = await UserModel.findOne({ email });
 
   if (userExist) {
@@ -41,6 +41,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -62,6 +63,7 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -71,12 +73,22 @@ const loginUser = asyncHandler(async (req, res) => {
 
 //@desc Get user data
 //@route GET /api/users/me
-//@access public
-const getMe = asyncHandler(async (req, res) => {});
+//@access Private
+const getMe = asyncHandler(async (req, res) => {
+  const { _id, name, email } = await UserModel.findById(req.user.id);
+
+
+  res.status(200).json({
+    id: _id,
+    name,
+    email,
+  });
+  throw new Error('Invalid user info')
+});
 
 //Generate a JWT
-
 const generateToken = (id) => {
+  //jsonwebtoken has a method sign takes three arguments but our jsonwebtoken will be created using the id
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30 days",
   });

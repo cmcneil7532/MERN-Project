@@ -9,10 +9,12 @@ const {
   delteGoals,
 } = require("../controllers/goalControllers");
 
-//Using the router.route we can combine HTTP request if they use the same ('/')
-router.route("/").get(getGoals).post(setGoals);
+const {protect} = require('../middleware/authMiddleware')
 
-router.route("/:id").delete(delteGoals);
-router.route('/:id').put(updateGoals)
+//Using the router.route we can combine HTTP request if they use the same ('/')
+router.route("/").get(protect,getGoals).post(protect,setGoals);
+
+router.route("/:id").delete(protect, delteGoals);
+router.route('/:id').put(protect, updateGoals)
 
 module.exports = router;
