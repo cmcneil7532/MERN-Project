@@ -6,7 +6,7 @@ const user = JSON.parse(localStorage.getItem("user"));
 
 //Create initial state for our authentication
 const initialState = {
-  user: user ? user : "null",
+  user: user ? user : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -18,22 +18,31 @@ export const register = createAsyncThunk(
   "auth/register",
   async (user, thunkAPI) => {
     try {
+      //Waiting for user data
       return await authService.register(user);
       //Handle error from request
     } catch (error) {
       const message =
-        (error.response && error.response.data && error.data.message) ||
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
         error.message ||
-        error / toString();
+        error.toString();
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+//Logout User
+export const logout = createAsyncThunk("/auth/logout", async () => {
+  await authService.logout();
+});
+
 //Create the slice
 export const authSlice = createSlice({
   name: "auth",
   initialState,
+  //Are not async
   reducers: {
     //Reset action
     reset: (state) => {
@@ -43,7 +52,30 @@ export const authSlice = createSlice({
       state.message = "";
     },
   },
-  extraReducers: () => {},
+  //Account for pending, fulfilled, and reject
+  //Async thunk function
+  extraReducers: (builder) => {
+    builder
+      //Check for pending
+      .addCase(register.pending, (state) => {
+        state.isLoading = true;
+      })
+      //If we got data back we want to do an action
+      .addCase(register.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(register.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+      });
+  },
 });
 //Bring our reducer function to other compoenents
 export const { reset } = authSlice.actions;
