@@ -24,7 +24,7 @@ db.on("error", (err) => {
 //-------------EXPRESS--------------
 
 const app = express();
-
+//Looks for request that are based Content-type: application/json header is present
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

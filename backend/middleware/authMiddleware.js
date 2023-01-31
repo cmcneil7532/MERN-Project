@@ -1,5 +1,5 @@
 //During our middleware when the user is making a request
-//Protect our get me route
+//Protect all routes
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("express-async-handler");
 const UserModel = require("../models/userModel");

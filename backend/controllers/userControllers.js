@@ -80,7 +80,7 @@ const getMe = asyncHandler(async (req, res) => {
 
 //Generate a JWT
 const generateToken = (id) => {
-  //jsonwebtoken has a method sign takes three arguments but our jsonwebtoken will be created using the id
+  //jsonwebtoken has a method sign takes three arguments but our jsonwebtoken will be signed using the id
   return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: "30 days",
   });

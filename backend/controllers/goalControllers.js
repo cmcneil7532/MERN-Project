@@ -2,14 +2,15 @@
 const asyncHandler = require("express-async-handler");
 
 const GoalModel = require("../models/goalsModel");
+const UserModel = require("../models/userModel");
 
 //@desc Get goals
 //@route GET /api/goals
 //@ Private
 const getGoals = asyncHandler(async (req, res) => {
   //MUST USE await due async
-  //In order to ge the goals we will look for the user's id
-  const goals = await GoalModel.find({ user: req.user.id});
+  //In order to get the goals we will look for the user's id
+  const goals = await GoalModel.find({ user: req.user.id });
 
   res.status(200).json(goals);
 });
@@ -25,7 +26,7 @@ const setGoals = asyncHandler(async (req, res) => {
 
   const goal = await GoalModel.create({
     text: req.body.text,
-    user: req.user.id
+    user: req.user.id,
   });
   res.status(200).json(goal);
 });
@@ -36,11 +37,27 @@ const setGoals = asyncHandler(async (req, res) => {
 const updateGoals = asyncHandler(async (req, res) => {
   //grab the id
   const goal = await GoalModel.findById(req.params.id);
-  //if id isnt press throw an error
+  //if id isnt present throw an error
   if (!goal) {
     res.status(400);
     throw new Error("Goal not found");
   }
+
+  //Check if user exist
+  const user = await UserModel.findById(req.user.id)
+
+  if(!user){
+    res.status(401)
+    throw new Error('User does not exist')
+  }
+  //Checkig between our UserModel and GoalModel if they don't match
+  if(goal.user.toString() !== user.id){
+    res.status(400)
+    throw new Error('User not authorized')
+  }
+
+
+
   // if success grab id and update
   const updatedGoal = await GoalModel.findByIdAndUpdate(
     req.params.id,
