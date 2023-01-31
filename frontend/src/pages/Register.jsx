@@ -13,11 +13,16 @@ const Register = () => {
   const { name, email, password, password2 } = formData;
 
   const onChange = (e) => {
-    return setFormData(e.target.value);
+   setFormData((prevState)=>({
+    //Create our formData in an object format
+    ...prevState,
+    //Key value pairs to be the name and value associated with the input 
+    [e.target.name]: e.target.value
+   }))
   };
-  const onSubmit = (e)=>{
+  const onSubmit = (e) => {
     e.preventDefault();
-  }
+  };
 
   return (
     <>
@@ -38,7 +43,7 @@ const Register = () => {
               value={name}
               onChange={onChange}
               placeholder="Enter your name"
-            ></input>
+            />
           </div>
           <div className="form-group">
             <input
@@ -49,7 +54,7 @@ const Register = () => {
               value={email}
               onChange={onChange}
               placeholder="Enter your email"
-            ></input>
+            />
           </div>
           <div className="form-group">
             <input
@@ -60,7 +65,7 @@ const Register = () => {
               value={password}
               onChange={onChange}
               placeholder="Enter your password"
-            ></input>
+            />
           </div>
           <div className="form-group">
             <input
@@ -71,11 +76,12 @@ const Register = () => {
               value={password2}
               onChange={onChange}
               placeholder="Confirm password"
-            ></input>
+            />
           </div>
           <div className="form-group">
-            <button type="submit" className="btn btn-block">Submit</button>
-
+            <button type="submit" className="btn btn-block">
+              Submit
+            </button>
           </div>
         </form>
       </section>
