@@ -1,6 +1,12 @@
 import React from "react";
-import { useState} from "react";
+import { useState } from "react";
 import { FaSignInAlt } from "react-icons/fa";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { login, reset } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +18,28 @@ const Login = () => {
   //Destruct our inputs that we will recieve from our formData useState
   const { email, password } = formData;
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isSuccess, isError, message } = useSelector(
+    (state) => state.auth
+  );
+
+  //useEffect to listen to specified input
+
+  useEffect(() => {
+    //Check for errors
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess || user) {
+      //if User and succes link to dashboard
+      navigate("/");
+    }
+    //
+    dispatch(reset());
+  }, [user, message, isLoading, dispatch, navigate, isError]);
+
   const onChange = (e) => {
     setFormData((prevState) => ({
       //Create our formData in an object format
@@ -22,7 +50,17 @@ const Login = () => {
   };
   const onSubmit = (e) => {
     e.preventDefault();
+
+    const userData = {
+      email,
+      password,
+    };
+    dispatch(login(userData));
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
